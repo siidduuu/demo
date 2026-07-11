@@ -85,12 +85,13 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            echo 'Post-build: archiving clang-format report and printing summary'
-            archiveArtifacts artifacts: "${env.PROJECT_DIR}/${env.BUILD_DIR}/clang-format-report.txt", allowEmptyArchive: true
-            sh 'echo "--- clang-format report (post) ---"; cat ${PROJECT_DIR}/${BUILD_DIR}/clang-format-report.txt || true'
+     post {
+        success {
+            // Changed pattern from *.jar to target/traffic-*.jar to exclude 'original-' files
+            archiveArtifacts artifacts: 'target/traffic-*.jar', fingerprint: true
+            echo 'Success! Your executable file is ready under Build Artifacts.'
         }
+    }
         success {
             echo 'Build succeeded.'
         }
